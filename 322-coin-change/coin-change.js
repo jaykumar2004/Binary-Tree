@@ -4,27 +4,18 @@
  * @return {number}
  */
 var coinChange = function (coins, amount) {
-
     let n = coins.length;
-    let dp = {};
-
-    let fn = (remAmount) => {
-        if (remAmount === 0) return 0;
-        if (remAmount < 0) return -1;
-        if (remAmount in dp) {
-            return dp[remAmount];
-        }
-        let minCoins = Infinity;
-        for (let i = 0; i < n; i++) {
-            let res = fn(remAmount - coins[i]);
-            if (res != -1) {
-                minCoins = Math.min(minCoins, 1 + res);
+    let dp = new Array(amount + 1).fill(Infinity);
+    dp[0] = 0;
+    for (let i = 1; i <= amount; i++) {
+        for (let j = 0; j < n; j++) {
+            let remAmount = i - coins[j]
+            if (remAmount >= 0) {
+                dp[i] = Math.min(dp[i], 1 + dp[remAmount]);
             }
+
         }
-
-        dp[remAmount] = minCoins === Infinity ? -1 : minCoins
-
-        return dp[remAmount];
     }
-    return fn(amount);
+    console.log(dp)
+    return dp[amount] === Infinity ? -1 : dp[amount];
 };
